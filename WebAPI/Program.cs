@@ -2,7 +2,7 @@ using System.Net;
 using Domain.AutoMapper;
 using Microsoft.Extensions.Options;
 using Serilog;
-using Service;
+using Service.Services;
 using WebAPI.Settings;
 
 // Add services to the container.

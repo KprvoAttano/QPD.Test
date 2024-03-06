@@ -11,9 +11,10 @@ using Newtonsoft.Json;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http;
 using Domain.Entities;
+using Domain.Interfaces;
 using Microsoft.Extensions.Logging;
 
-namespace Service
+namespace Service.Services
 {
     public class DaDataService : IDaDataService
     {

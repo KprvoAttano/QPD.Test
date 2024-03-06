@@ -1,6 +1,6 @@
 ﻿using Domain.Entities;
 
-namespace Service;
+namespace Domain.Interfaces;
 
 public interface IDaDataService
 {
