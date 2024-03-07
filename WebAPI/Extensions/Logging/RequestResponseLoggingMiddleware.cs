@@ -2,33 +2,29 @@
 
 namespace WebAPI.Extensions.Logging
 {
-    public class RequestResponseLoggingMiddleware
+    public class RequestResponseLoggingMiddleware(
+        RequestDelegate next,
+        ILogger<RequestResponseLoggingMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<RequestResponseLoggingMiddleware> _logger;
-
-        public RequestResponseLoggingMiddleware(RequestDelegate next,
-            ILogger<RequestResponseLoggingMiddleware> logger)
-        {
-            _next = next;
-            _logger = logger;
-        }
-
         public async Task Invoke(HttpContext context)
         {
             LogRequest(context);
 
-            var originalBodyStream = context.Response.Body;
-            using (var responseBody = new MemoryStream())
-            {
-                await _next(context);
+            await next(context);
 
-                context.Response.Body = responseBody;
+            LogResponse(context);
 
-                LogResponse(context);
+            //var originalBodyStream = context.Response.Body;
+            //using (var responseBody = new MemoryStream())
+            //{
+            //    await next(context);
 
-                await responseBody.CopyToAsync(originalBodyStream);
-            }
+            //    //context.Response.Body = responseBody;
+
+            //    LogResponse(context);
+
+            //    await responseBody.CopyToAsync(originalBodyStream);
+            //}
         }
 
         private void LogRequest(HttpContext context)
@@ -42,7 +38,7 @@ namespace WebAPI.Extensions.Logging
             requestLog.AppendLine($"Content-Type: {request.ContentType}");
             requestLog.AppendLine($"Content-Length: {request.ContentLength}");
 
-            _logger.LogInformation(requestLog.ToString());
+            logger.LogInformation(requestLog.ToString());
         }
 
         private void LogResponse(HttpContext context)
@@ -55,7 +51,7 @@ namespace WebAPI.Extensions.Logging
             responseLog.AppendLine($"Content-Type: {response.ContentType}");
             responseLog.AppendLine($"Content-Length: {response.ContentLength}");
 
-            _logger.LogInformation(responseLog.ToString());
+            logger.LogInformation(responseLog.ToString());
         }
     }
 }

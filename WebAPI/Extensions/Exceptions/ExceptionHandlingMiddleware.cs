@@ -12,7 +12,7 @@ namespace WebAPI.Extensions.Exceptions
     {
         public RequestDelegate RequestDelegate = requestDelegate;
 
-        public async Task InvokeAsync(HttpContext context)
+        public async Task Invoke(HttpContext context)
         {
             try
             {
