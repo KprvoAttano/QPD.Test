@@ -1,8 +1,10 @@
 using System.Net;
 using Domain.AutoMapper;
+using Domain.Interfaces;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Service.Services;
+using WebAPI.Extensions;
 using WebAPI.Settings;
 
 // Add services to the container.
@@ -55,6 +57,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.ConfigureCustomExceptionMiddleware();
 
 app.UseHttpsRedirection();
 

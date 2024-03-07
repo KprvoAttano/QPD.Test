@@ -10,8 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http;
-using Domain.Entities;
 using Domain.Interfaces;
+using Domain.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Service.Services
@@ -36,7 +36,7 @@ namespace Service.Services
                 var httpClient = _httpClientFactory.CreateClient("DaDataClient");
 
                 var content = JsonConvert.SerializeObject(new[] { address.Address });
-                _logger.LogInformation($"Created content: {content}");
+                _logger.LogInformation("Created content: {0}", content);
 
                 using (var response =
                        await httpClient.PostAsync("", new StringContent(content, Encoding.UTF8, "application/json")))
@@ -47,13 +47,13 @@ namespace Service.Services
 
                     var dataObject = JsonConvert.DeserializeObject<List<Address>>(resp).First();
 
-                    _logger.LogDebug($"Outside client Task with result: {dataObject.result}");
+                    _logger.LogDebug("Outside client Task with clean address: {0}", dataObject.result);
                     return dataObject;
                 }
             }
             catch (Exception ex)
             {
-                _logger.LogError($"[ERROR] DaDataService. Error: {ex.Message}");
+                _logger.LogError("[ERROR] DaDataService. Error: {0}", ex.Message);
                 return null;
             }
         }

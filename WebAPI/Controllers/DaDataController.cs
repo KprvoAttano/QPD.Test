@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Domain.Entities;
+using Domain.Interfaces;
+using Domain.Models;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Service;
@@ -17,18 +18,10 @@ namespace WebAPI.Controllers
         [HttpGet("cleanAddress")]
         public async Task<IActionResult> GetClear([FromQuery] RawAddressData rawAddressData)
         {
-            try
-            {
-                logger.LogInformation($"Entered HTTP GET. Params: {rawAddressData.Address}");
-                var cleanAddress = await service.GetJsonFromDaData(mapper.Map<AddressDto>(rawAddressData)).ConfigureAwait(false);
-                logger.LogInformation($"Out of HTTP GET. Result: {cleanAddress}");
-                return Ok(cleanAddress);
-            }
-            catch (Exception ex)
-            {
-                logger.LogError($"DaDataController HTTP GET: {ex.Message}");
-                return StatusCode(500, "An error occurred while cleaning the address.");
-            }
+            logger.LogInformation("Entered HTTP GET. Params: {0}", rawAddressData.Address);
+            var cleanAddress = await service.GetJsonFromDaData(mapper.Map<AddressDto>(rawAddressData)).ConfigureAwait(false);
+            logger.LogInformation("Out of HTTP GET. Result: {0}", cleanAddress);
+            return Ok(cleanAddress);
         }
     }
 }
