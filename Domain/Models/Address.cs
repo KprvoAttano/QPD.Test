@@ -152,9 +152,4 @@ namespace Domain.Models
         public string line { get; set; }
         public decimal distance { get; set; }
     }
-
-    public class Addresses
-    {
-        public List<Address> ListOfAddresses { get; set; }
-    }
 }
