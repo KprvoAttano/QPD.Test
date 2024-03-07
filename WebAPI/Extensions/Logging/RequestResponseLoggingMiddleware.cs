@@ -23,9 +23,7 @@ namespace WebAPI.Extensions.Logging
                     LogResponse(context);
 
                     stream.Position = 0;
-
                     await stream.CopyToAsync(originalBodyStream);
-
                 }
             }
             finally

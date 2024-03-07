@@ -47,9 +47,9 @@ namespace Service.Services
                 {
                     response.EnsureSuccessStatusCode();
 
-                    var resp = await response.Content.ReadAsStreamAsync(token);
+                    var stream = await response.Content.ReadAsStreamAsync(token);
 
-                    var data = ((List<Address>) await JsonSerializer.DeserializeAsync(resp, typeof(List<Address>)));
+                    var data = await JsonSerializer.DeserializeAsync<List<Address>>(stream, cancellationToken: token);
 
                     _logger.LogDebug("Outside client Task with clean address: {0}", data);
                     return data;
