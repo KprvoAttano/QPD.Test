@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using Microsoft.AspNetCore.Http;
+using System.Text;
 
 namespace WebAPI.Extensions.Logging
 {
@@ -10,21 +11,27 @@ namespace WebAPI.Extensions.Logging
         {
             LogRequest(context);
 
-            await next(context);
+            var originalBodyStream = context.Response.Body;
+            try
+            {
 
-            LogResponse(context);
+                using (var stream = new MemoryStream())
+                {
+                    context.Response.Body = stream;
+                    await next(context);
 
-            //var originalBodyStream = context.Response.Body;
-            //using (var responseBody = new MemoryStream())
-            //{
-            //    await next(context);
+                    LogResponse(context);
 
-            //    //context.Response.Body = responseBody;
+                    stream.Position = 0;
 
-            //    LogResponse(context);
+                    await stream.CopyToAsync(originalBodyStream);
 
-            //    await responseBody.CopyToAsync(originalBodyStream);
-            //}
+                }
+            }
+            finally
+            {
+                context.Response.Body = originalBodyStream;
+            }
         }
 
         private void LogRequest(HttpContext context)
