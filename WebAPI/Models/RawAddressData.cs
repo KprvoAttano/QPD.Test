@@ -1,4 +1,4 @@
-﻿namespace Domain.Models
+﻿namespace WebAPI.Models
 {
     public class RawAddressData
     {

@@ -1,4 +1,6 @@
-﻿namespace Domain.Models
+﻿using System.Text.Json.Serialization;
+
+namespace Domain.Models
 {
     public class Address
     {
@@ -113,23 +115,35 @@
         public string beltway_hit { get; set; }
         public string beltway_distance { get; set; }
 
-        public string qc_geo { get; set; }
-        public string qc_complete { get; set; }
-        public string qc_house { get; set; }
-        public string qc { get; set; }
+        //public string qc_geo { get; set; }
+        //public string qc_complete { get; set; }
+        //public string qc_house { get; set; }
+        //public string qc { get; set; }
+
+        [JsonPropertyName("qc_geo")]
+        public int? QcGeo { get; set; }
+
+        [JsonPropertyName("qc_complete")]
+        public int? QcComplete { get; set; }
+
+        [JsonPropertyName("qc_house")]
+        public int? QcHouse { get; set; }
+
+        [JsonPropertyName("qc")]
+        public int? Qc { get; set; }
 
         public string unparsed_parts { get; set; }
 
         public List<string> history_values { get; set; }
         public List<AddressMetro> metro { get; set; }
 
-        public override string ToString()
-        {
-            return string.Format(
-                "[AddressData: source={0}, postal_code={1}, result={2}, qc={3}]",
-                source, postal_code, result, qc
-            );
-        }
+        //public override string ToString()
+        //{
+        //    return string.Format(
+        //        "[AddressData: source={0}, postal_code={1}, result={2}, qc={3}]",
+        //        source, postal_code, result, Qc
+        //    );
+        //}
     }
 
     public class AddressMetro
@@ -137,5 +151,10 @@
         public string name { get; set; }
         public string line { get; set; }
         public decimal distance { get; set; }
+    }
+
+    public class Addresses
+    {
+        public List<Address> ListOfAddresses { get; set; }
     }
 }

@@ -7,12 +7,14 @@ using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Dadata;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json;
 using Microsoft.Net.Http.Headers;
 using System.Net.Http;
+using System.Text.Json;
 using Domain.Interfaces;
+using Domain.JsonSerializeOptions;
 using Domain.Models;
 using Microsoft.Extensions.Logging;
+using System.Text.RegularExpressions;
 
 namespace Service.Services
 {
@@ -27,7 +29,7 @@ namespace Service.Services
             _logger = logger;
         }
 
-        public async Task<Address> GetJsonFromDaData(AddressDto address)
+        public async Task<List<Address>> GetJsonFromDaDataAsync(AddressDto address, CancellationToken token)
         {
             try
             {
@@ -35,20 +37,22 @@ namespace Service.Services
 
                 var httpClient = _httpClientFactory.CreateClient("DaDataClient");
 
-                var content = JsonConvert.SerializeObject(new[] { address.Address });
+                var addArray = new[] { address.Address };
+
+                var content = JsonSerializer.Serialize(addArray, AddressDtoJsonSerializeOptions.Options);
                 _logger.LogInformation("Created content: {0}", content);
 
                 using (var response =
-                       await httpClient.PostAsync("", new StringContent(content, Encoding.UTF8, "application/json")))
+                       await httpClient.PostAsync("", new StringContent(content, Encoding.UTF8, "application/json"), token))
                 {
                     response.EnsureSuccessStatusCode();
 
-                    var resp = response.Content.ReadAsStringAsync().Result;
+                    var resp = await response.Content.ReadAsStreamAsync(token);
 
-                    var dataObject = JsonConvert.DeserializeObject<List<Address>>(resp).First();
+                    var data = ((List<Address>) await JsonSerializer.DeserializeAsync(resp, typeof(List<Address>)));
 
-                    _logger.LogDebug("Outside client Task with clean address: {0}", dataObject.result);
-                    return dataObject;
+                    _logger.LogDebug("Outside client Task with clean address: {0}", data);
+                    return data;
                 }
             }
             catch (Exception ex)

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Newtonsoft.Json;
 using System.Net;
 
-namespace WebAPI.Extensions
+namespace WebAPI.Extensions.Exceptions
 {
     public class ExceptionHandlingMiddleware(
         RequestDelegate requestDelegate,

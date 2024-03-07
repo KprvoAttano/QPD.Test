@@ -1,15 +1,17 @@
 using System.Net;
-using Domain.AutoMapper;
 using Domain.Interfaces;
 using Microsoft.Extensions.Options;
 using Serilog;
 using Service.Services;
+using WebAPI.AutoMapper;
 using WebAPI.Extensions;
+using WebAPI.Extensions.Logging;
 using WebAPI.Settings;
 
 // Add services to the container.
 
-ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => true;
+//проверка сертификата
+//ServicePointManager.ServerCertificateValidationCallback = (a, b, c, d) => true;
 
 var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
@@ -27,7 +29,7 @@ builder.Host.UseSerilog((ctx, lc) => lc.WriteTo.Console().MinimumLevel.Debug());
 
 builder.Services.Configure<DaDataSettings>(builder.Configuration.GetSection("DaDataHeaders"));
 
-builder.Services.AddAutoMapper(typeof(MapProfile));
+builder.Services.AddAutoMapper(typeof(AddressProfile));
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
@@ -59,6 +61,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.ConfigureCustomExceptionMiddleware();
+app.ConfigureCustomLoggingMiddleware();
 
 app.UseHttpsRedirection();
 

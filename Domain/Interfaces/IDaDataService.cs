@@ -4,5 +4,5 @@ namespace Domain.Interfaces;
 
 public interface IDaDataService
 {
-    Task<Address> GetJsonFromDaData(AddressDto address);
+    Task<List<Address>> GetJsonFromDaDataAsync(AddressDto address, CancellationToken token);
 }
